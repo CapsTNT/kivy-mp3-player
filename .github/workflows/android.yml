@@ -23,23 +23,17 @@ jobs:
           mkdir -p $HOME/android-sdk/cmdline-tools
           cd $HOME/android-sdk/cmdline-tools
           curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-          unzip commandlinetools.zip -d tmp
+          unzip commandlinetools.zip
           rm commandlinetools.zip
-          mv tmp/cmdline-tools latest
-        
-      - name: Show SDK Structure
-        env:
-          ANDROID_SDK_ROOT: $HOME/android-sdk
-        run: |
-          echo "📁 Listing android-sdk directory"
-          ls -R $ANDROID_SDK_ROOT || true
-          echo "🔍 Searching for sdkmanager"
-          find $ANDROID_SDK_ROOT -type f -name sdkmanager || echo "sdkmanager not found"
+          mkdir latest
+          mv cmdline-tools/* latest/
+          rmdir cmdline-tools
 
       - name: Accept Android SDK Licenses
         env:
           ANDROID_SDK_ROOT: $HOME/android-sdk
-        run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+        run: |
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
 
       - name: Install buildozer and dependencies
         run: |
