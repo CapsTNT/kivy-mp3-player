@@ -28,13 +28,6 @@ jobs:
           mv temp/cmdline-tools/* latest/
           rm -rf temp commandlinetools.zip
 
-      - name: Show SDK Structure
-        run: |
-          echo "📁 Listing android-sdk directory"
-          ls -R $HOME/android-sdk || echo "❌ SDK directory not found"
-          echo "🔍 Searching for sdkmanager"
-          find $HOME/android-sdk -name sdkmanager || echo "❌ sdkmanager not found"
-
       - name: Accept Android SDK Licenses
         env:
           ANDROID_SDK_ROOT: $HOME/android-sdk
