@@ -23,11 +23,17 @@ jobs:
           mkdir -p $HOME/android-sdk/cmdline-tools
           cd $HOME/android-sdk/cmdline-tools
           curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-          unzip commandlinetools.zip
-          rm commandlinetools.zip
-          mkdir latest
-          mv cmdline-tools/* latest/
-          rmdir cmdline-tools
+          unzip commandlinetools.zip -d temp
+          mkdir -p latest
+          mv temp/cmdline-tools/* latest/
+          rm -rf temp commandlinetools.zip
+
+      - name: Show SDK Structure
+        run: |
+          echo "📁 Listing android-sdk directory"
+          ls -R $HOME/android-sdk || echo "❌ SDK directory not found"
+          echo "🔍 Searching for sdkmanager"
+          find $HOME/android-sdk -name sdkmanager || echo "❌ sdkmanager not found"
 
       - name: Accept Android SDK Licenses
         env:
