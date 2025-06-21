@@ -25,7 +25,14 @@ jobs:
           curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
           unzip commandlinetools.zip
           rm commandlinetools.zip
-          mv cmdline-tools latest
+          # List contents before moving
+          ls -l
+          # Move cmdline-tools to latest if exists
+          if [ -d cmdline-tools ]; then
+            mv cmdline-tools latest
+          fi
+          # List contents inside latest/bin to check sdkmanager
+          ls -l latest/bin
 
       - name: Accept Android SDK Licenses
         env:
