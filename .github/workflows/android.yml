@@ -23,10 +23,16 @@ jobs:
           mkdir -p $HOME/android-sdk/cmdline-tools
           cd $HOME/android-sdk/cmdline-tools
           curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-          unzip commandlinetools.zip -d temp
-          mkdir -p latest
-          mv temp/cmdline-tools/* latest/
-          rm -rf temp commandlinetools.zip
+          unzip commandlinetools.zip
+          rm commandlinetools.zip
+          # The unzip will create a 'cmdline-tools' folder inside current directory
+          # Move that inner folder to 'latest'
+          mv cmdline-tools latest
+
+      - name: Debug: List android-sdk directory structure
+        run: |
+          echo "Listing $HOME/android-sdk contents"
+          ls -R $HOME/android-sdk
 
       - name: Accept Android SDK Licenses
         env:
