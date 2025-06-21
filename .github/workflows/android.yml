@@ -18,6 +18,20 @@ jobs:
         with:
           python-version: "3.10"
 
+      - name: Install Android SDK cmdline-tools
+        run: |
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          cd $HOME/android-sdk/cmdline-tools
+          curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip commandlinetools.zip
+          rm commandlinetools.zip
+          mv cmdline-tools latest
+
+      - name: Accept Android SDK Licenses
+        env:
+          ANDROID_SDK_ROOT: $HOME/android-sdk
+        run: yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+
       - name: Install buildozer and dependencies
         run: |
           sudo apt update
@@ -25,25 +39,12 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython virtualenv
 
-      - name: Install Android SDK cmdline-tools
-        run: |
-          mkdir -p $HOME/.buildozer/android/platform/android-sdk/cmdline-tools
-          cd $HOME/.buildozer/android/platform/android-sdk/cmdline-tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
-          unzip cmdline-tools.zip
-          mv cmdline-tools latest
-          rm cmdline-tools.zip
-
-      - name: Accept Android SDK Licenses
-        env:
-          ANDROID_SDK_ROOT: $HOME/.buildozer/android/platform/android-sdk
-        run: |
-          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-
       - name: Initialize buildozer
         run: buildozer init || true
 
       - name: Build APK
+        env:
+          ANDROID_SDK_ROOT: $HOME/android-sdk
         run: buildozer android debug
 
       - name: Upload APK
